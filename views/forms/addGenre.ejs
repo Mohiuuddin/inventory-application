@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/style.css">
+ 
+  <title>Game Management App</title>
+</head>
+<body>
+  
+  <%- include('../partials/nav.ejs') %>
+  <main class="form-container">
+  <h2>Add a New Genre</h2>
+  
+  <form action="<%= locals.genre? '/genres/' + genre.id + '/edit' : '/genres/add' %>" method="POST" >
+    
+    <div class="form-group">
+      <label for="name">Genre Nmae</label>
+      <input type="text" id="name" name="name" value="<%=locals.genre? genre.name : '' %>" required placeholder="e.g. Action">
+    </div>
+  
+    <button type="submit" class="submit-btn">
+      <%= locals.genre? 'Update Genre' : 'Add Genre' %>
+    </button>
+  </form>
+</main>
+
+ <%- include('../partials/footer.ejs') %>
+ 
+
+</body>
+</html>

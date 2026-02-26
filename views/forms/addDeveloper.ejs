@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/style.css">
+ 
+  <title>Game Management App</title>
+</head>
+<body>
+  
+  <%- include('../partials/nav.ejs') %>
+  <main class="form-container">
+  <h2>Add a New Developer</h2>
+
+  <form action="<%= locals.developer? '/developers/' + developer.id + '/edit' : '/developers/add' %>" method="POST" >
+    
+    <div class="form-group">
+      <label for="title">Developer Nmae</label>
+      <input type="text" id="title" name="name" value="<%= locals.developer? developer.name : '' %>" required placeholder="e.g. Infinity Ward">
+    </div>
+
+     <div class="form-group">
+      <label for="country">Country Nmae</label>
+      <input type="text" id="country" name="country" value="<%= locals.developer? developer.country : '' %>" required placeholder="e.g. USA">
+    </div>
+  
+    <button type="submit" class="submit-btn">
+      <%= locals.developer? 'Update Developer' : 'Add Developer' %>
+    </button>
+  </form>
+</main>
+
+ <%- include('../partials/footer.ejs') %>
+ 
+
+</body>
+</html>

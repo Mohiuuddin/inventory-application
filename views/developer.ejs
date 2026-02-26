@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>Game Management App</title>
+</head>
+<body>
+  
+  <%- include('./partials/nav.ejs') %>
+  <main>
+    <h1>All Developer</h1>
+    <div class="developer">
+      <table class="data-table">
+    <thead>
+      <tr>
+        <th>Developer Name</th>
+        <th>Country</th>
+        <th>Actions</th> </tr>
+    </thead>
+    <tbody>
+        <% developers.forEach((developer, index)=>{ %>
+          <tr>
+          <td><%= developer.name %></td>
+          <td><%= developer.country %></td>
+          <td>
+            <a href="/developers/<%= developer.id %>/edit" class="btn-edit">Edit</a>
+             <!-- <a href="/developers/:id/delete" class="btn-delete">Delete</a> -->
+             <button class="btn-delete" data-id="<%= developer.id %>" style="border: none; cursor: pointer;">Delete</button>
+          </td>
+        </tr>
+        <% }) %>
+       
+        
+   
+    </tbody>
+  </table>
+    </div>
+   
+  </main>
+
+ <%- include('./partials/footer.ejs') %>
+ <script>
+  document.querySelectorAll('.btn-delete').forEach(button => {
+    button.addEventListener('click', async (e) => {
+      
+      const btn = e.currentTarget;
+      const id = btn.dataset.id;
+      const row = btn.closest('tr'); 
+
+      if (confirm('Are you sure you want to delete this?')) {
+        try {
+          const response = await fetch(`/developers/${id}/delete`, {
+            method: 'POST',
+          });
+
+          if (response.ok) {
+            
+            if (row) {
+              row.remove();
+            }
+          } else {
+            alert('Failed to delete on server');
+          }
+        } catch (err) {
+          
+          console.error('Network Error:', err);
+        }
+      }
+    });
+  });
+ </script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/style.css">
+  <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+  <title>Game Management App</title>
+</head>
+<body>
+  
+  <%- include('../partials/nav.ejs') %>
+  <main class="form-container">
+  <h2>Add a New Game</h2>
+  
+  <form action="<%= game? `/games/${game.id}/edit` : '/games/add' %>" method="POST" enctype="multipart/form-data">
+    
+    <div class="form-group">
+      <label for="title">Game Title</label>
+      <input type="text" id="title" name="title" 
+      value="<%=game ? game.title : '' %>"
+      required placeholder="e.g. The Witcher 3">
+    </div>
+
+    <div class="form-group">
+      <label for="release_date">Release Date</label>
+      <input type="date" id="release_date" name="release_date" 
+      value="<%= game ? game.release_date.toISOString().split('T')[0] : ''  %>"
+      max="<%= new Date().toISOString().split('T')[0] %>" required>
+    </div>
+
+    <div class="form-group">
+      <% if (game && game.image_url) { %>
+  <div class="form-group">
+    <p>Current Image:</p>
+    <img src="<%= game.image_url %>" width="150">
+    <input type="hidden" name="existing_image" value="<%= game.image_url %>">
+  </div>
+<% } %>
+      <label for="image_url">Image URL</label>
+      <input type="file" id="image_url" name="image_url" accept="image/*" placeholder="image.jpg">
+    </div>
+
+   <div class="form-group">
+  <label for="developers">Developers</label>
+  <select id="select-developers" name="developers" multiple placeholder="Search or add developers..." autocomplete="off">
+    <% developers.forEach(dev=>{ %>
+      <option value="<%=dev.id %>" 
+        <%= gameDevs && gameDevs.includes(dev.id) ? 'selected' : '' %>>
+        <%= dev.name %>
+      </option>
+    <% }) %>
+  </select>
+</div>
+
+   <div class="form-group">
+  <label for="genres">Genres</label>
+  <select id="select-genres" name="genres" multiple placeholder="Select genres..." autocomplete="off">
+    <% genres.forEach(genre=>{ %>
+      <option value="<%=genre.id %>"
+        <%= gameGenres && gameGenres.includes(genre.id)? 'selected' : '' %>>
+        <%= genre.name %> 
+      </option>
+    <% }) %>
+  </select>
+</div>
+    <button type="submit" class="submit-btn">
+      <%= game ? 'Update Game' : 'Add Game' %>
+    </button>
+  </form>
+</main>
+
+ <%- include('../partials/footer.ejs') %>
+ <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+ <script>
+  // Initialize Tom Select for Genres
+  new TomSelect("#select-genres", {
+    plugins: ['remove_button'], // Adds the "X" to remove a tag
+    create: true,               // Allows users to type and create new genres on the fly!
+    maxItems: 5,                // Optional: limit how many they can pick
+    persist: false,
+  });
+
+ 
+
+  new TomSelect("#select-developers", {
+  plugins: ['remove_button'],
+  create: true,
+  onItemAdd: function() {
+    this.setTextboxValue('');
+    this.refreshOptions();
+  }
+});
+
+</script>
+
+</body>
+</html>
